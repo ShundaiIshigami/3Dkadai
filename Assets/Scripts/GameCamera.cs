@@ -11,8 +11,10 @@ public class GameCamera : MonoBehaviour
     [SerializeField] float targetDistance;
     [SerializeField] float rotateSpeed;
 
+
     float pitch;
     float yaw;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +22,9 @@ public class GameCamera : MonoBehaviour
         yaw = 90;
         pitch = 0;
     }
+
+    
+
 
     // Update is called once per frame
     void Update()
@@ -35,4 +40,6 @@ public class GameCamera : MonoBehaviour
         transform.rotation = rotation;
         transform.position = position;
     }
+
+    
 }
