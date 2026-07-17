@@ -5,23 +5,25 @@ public class Enemy : MonoBehaviour
 
     Rigidbody rb;
 
-    [SerializeField] Enemy[] enemies;
+    
 
-    SerializeField] float rotateSpeed = 20;
+    [SerializeField] float rotateSpeed = 20;
 
     [SerializeField] float moveSpeed;
+
+    [SerializeField] int hp = 2;
+
+    [SerializeField] float invincibleTimeMax = 0.5f;
+
+    [SerializeField] float knockbackSpeed;
+
+    float invincibleTime = 0f;
 
     public Collider playerCollider { get; set; }
 
     bool isSeenPlayer;
 
-    void OnEnable()
-    {
-        foreach (var enemy in enemies)
-        {
-            enemy.playerCollider = playerCollider;
-        }
-    }
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -49,7 +51,7 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (isSeenPlayer)
+        if (isSeenPlayer && invincibleTime <= 0)
         {
             var subVec = playerCollider.bounds.center - rb.position;
             subVec.y = 0;
@@ -62,7 +64,30 @@ public class Enemy : MonoBehaviour
                 rotateSpeed * Time.deltaTime);
         }
 
+        if (invincibleTime > 0)
+        {
+            invincibleTime-= Time.deltaTime;
+        }
+    }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        var attackObj = collision.gameObject.GetComponent<AttackObject>();
+
+        if (attackObj != null && invincibleTime <= 0) 
+        {
+            hp = attackObj.power;
+            invincibleTime=invincibleTimeMax;
+            if (hp <= 0)
+            {
+                Destroy(gameObject);
+            }
+
+            var dir = transform.position - collision.transform.position;
+            dir.y = 0;
+            var knockbackVec = dir.normalized * knockbackSpeed;
+            rb.linearVelocity = knockbackVec;
+        }
     }
 
 

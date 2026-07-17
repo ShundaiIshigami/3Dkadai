@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,6 +24,18 @@ public class Player : MonoBehaviour
 
     [SerializeField] float groundDamping = 8f;
     [SerializeField] float airDamping = 0.5f;
+
+    [SerializeField] GameObject firePrefab;
+
+    [SerializeField] float fireSpeed;
+
+    [SerializeField] Vector3 fireOffset;
+
+    [SerializeField] float invincibleTimeMax = 0.5f;
+
+    [SerializeField] float knockbackSpeed;
+
+    float invincibleTime = 0f;
 
 
     bool isGrounded;
@@ -53,6 +66,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        
+
         var moveVec = playerInput.actions["Move"].ReadValue<Vector2>();
         var moveVec3D = new Vector3(
             moveVec.x * speedMax, 0, moveVec.y * speedMax);
@@ -89,7 +105,16 @@ public class Player : MonoBehaviour
         transform.forward =
             Vector3.Slerp(forward, rotateTarget, rotateSpeed * Time.deltaTime);
 
-        
+        if (playerInput.actions["Attack"].WasPerformedThisFrame())
+        {
+            var position = transform.position + transform.TransformVector(fireOffset);
+            var fireObj = Object.Instantiate(firePrefab,position,transform.rotation);
+            var fireRB = fireObj.GetComponent<Rigidbody>();
+            if( fireRB != null )
+            {
+                fireRB.linearVelocity = transform.forward * fireSpeed;
+            }
+        }
 
         // ƒWƒƒƒ“ƒv
         if (playerInput.actions["Jump"].WasPressedThisFrame() && isGrounded)
@@ -113,5 +138,23 @@ public class Player : MonoBehaviour
                 isGrounded = true;
             }
         }
+        var attackObj = collision.gameObject.GetComponent<AttackObject>();
+
+        if (attackObj != null && invincibleTime <= 0)
+        {
+            hp = attackObj.power;
+            invincibleTime = invincibleTimeMax;
+            if (hp <= 0)
+            {
+                Destroy(gameObject);
+            }
+
+            var dir = transform.position - collision.transform.position;
+            dir.y = 0;
+            var knockbackVec = dir.normalized * knockbackSpeed;
+            rb.linearVelocity = knockbackVec;
+        }
     }
+
+    
 }

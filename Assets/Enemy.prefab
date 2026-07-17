@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 2153220448563121659}
   - component: {fileID: 88133933493238924}
   - component: {fileID: 8639071275514748564}
+  - component: {fileID: 3993874736965338151}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -214,6 +215,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad42031a5d834c5469903ce24ea29d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  rotateSpeed: 20
+  moveSpeed: 5
+  hp: 2
+  invincibleTimeMax: 0.5
+  knockbackSpeed: 0
+--- !u!114 &3993874736965338151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2979081891153779277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38469a7b2b0b34a4699c62a20b8e2ec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackObject
+  power: 1
 --- !u!1 &3841387825269353641
 GameObject:
   m_ObjectHideFlags: 0
