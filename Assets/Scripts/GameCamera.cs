@@ -14,7 +14,10 @@ public class GameCamera : MonoBehaviour
 
     float pitch;
     float yaw;
-    
+
+    public float minPitch = -30f; // 下方向（見下ろし）の制限
+    public float maxPitch = 60f;  // 上方向（見上げ）の制限
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,9 +36,14 @@ public class GameCamera : MonoBehaviour
         yaw += lookVec.x * rotateSpeed * Time.deltaTime;
         pitch -= lookVec.y * rotateSpeed * Time.deltaTime;
 
+        //kokototyuu
+        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+
         var target = lookTarget.position + offset;
         var rotation = Quaternion.Euler(pitch, yaw, 0);
         var position = rotation * new Vector3(0, 0, -targetDistance) + target;
+
+
 
         transform.rotation = rotation;
         transform.position = position;

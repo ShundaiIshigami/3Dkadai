@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] float invincibleTimeMax = 0.5f;
 
-    [SerializeField] float knockbackSpeed;
+    [SerializeField] float knockbackSpeed=5;
 
     float invincibleTime = 0f;
 
@@ -29,15 +29,15 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        var subVec = playerCollider.bounds.center - rb.position;
-        subVec.y = 0;
-        rb.linearVelocity = subVec.normalized * moveSpeed;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
+
+
         var direction = playerCollider.bounds.center - rb.position;
 
         isSeenPlayer = true;
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         {
             if (hitInfo.collider != playerCollider)
             {
-                // プレイヤー以外の障害物に当たった場合は見えない1
+                // プレイヤー以外の障害物に当たった場合は見えない
                 isSeenPlayer = false;
             }
         }
@@ -72,11 +72,16 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        var attackObj = collision.gameObject.GetComponent<AttackObject>();
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            return;
+        }
+
+            var attackObj = collision.gameObject.GetComponent<AttackObject>();
 
         if (attackObj != null && invincibleTime <= 0) 
         {
-            hp = attackObj.power;
+            hp -= attackObj.power;
             invincibleTime=invincibleTimeMax;
             if (hp <= 0)
             {
